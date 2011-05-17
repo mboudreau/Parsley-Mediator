@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Objects 	xmlns="http://www.spicefactory.org/parsley"
+			xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		   	xmlns:s="library://ns.adobe.com/flex/spark" 
+		   	xmlns:mx="library://ns.adobe.com/flex/mx" 
+			xmlns:mediators="com.michelboudreau.mediators.*" 
+			xmlns:utils="com.michelboudreau.utils.*" 
+			xmlns:mediator="org.spicefactory.parsley.tag.mediator.*">
+	<fx:Script>
+		<![CDATA[
+			import com.michelboudreau.mediators.MainUIMediator;
+			import com.michelboudreau.views.MainUI;
+			import mx.logging.LogEventLevel;
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- LOGGING -->
+		<utils:FirebugLoggerTarget level="{LogEventLevel.ALL}" includeTime="true" />
+		
+		<!-- SERVICES -->
+		
+		<!-- MODELS -->
+		
+		<!-- MEDIATORS -->
+		<!-- Alternatively, if you don't want to create a 'spare' instance of the mediator,
+		you can use parsley object instead -->
+		<!--<mediators:MainUIMediator /> -->
+		 <!-- OR -->
+		<Object type="{MainUIMediator}">
+			<mediator:Mediator view="{MainUI}" />
+		</Object>
+		
+		<!-- COMMANDS -->
+		
+	</fx:Declarations>
+</Objects>

@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<componentPackage>
+	<component id="Mediator" class="org.spicefactory.parsley.flex.tag.mediator.MediatorTag"/>
+	<component id="WireMediator" class="org.spicefactory.parsley.flex.tag.mediator.WireMediatorTag"/>
+</componentPackage>
