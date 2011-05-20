@@ -1,6 +1,8 @@
 package org.spicefactory.parsley.tag.mediator
 {
+	import flash.events.Event;
 	import flash.events.EventDispatcher;
+	
 	import mx.core.UIComponent;
 	
 	/**
@@ -34,7 +36,13 @@ package org.spicefactory.parsley.tag.mediator
 		[Destroy]
 		public function viewDestroyed():void
 		{
-			this._view = null;
+			// TODO: this gets called when 'removeFromStage' happens, do we really want that?
+			/*if(this._view)
+			{
+				// Dispatch remove event
+				this._view.dispatchEvent(new Event(Mediator.REMOVE_MEDIATOR, true));
+				this._view = null;
+			}*/
 		}
 	}
 }

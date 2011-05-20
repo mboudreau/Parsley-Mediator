@@ -19,6 +19,7 @@ package org.spicefactory.parsley.core.view.impl
 	import org.spicefactory.parsley.core.view.ViewAutowireFilter;
 	import org.spicefactory.parsley.core.view.ViewManager;
 	import org.spicefactory.parsley.core.view.impl.DefaultViewManager;
+	import org.spicefactory.parsley.tag.mediator.AbstractMediator;
 	import org.spicefactory.parsley.tag.mediator.Mediator;
 	
 	/**
@@ -77,18 +78,28 @@ package org.spicefactory.parsley.core.view.impl
 		}
 		
 		/**
-		 * Adds a relationship between the view and the mediator class
+		 * Adds a relationship between the view and the mediator class.  Possible
+		 * to add more than one mediator to a view.
 		 *  
 		 * @param view The view class to relate the mediator to
 		 * @param mediator The object definition of the mediator
 		 */		
 		public function addMediator(view:Class, mediator:DynamicObjectDefinition):void
 		{
-			// Can only add one mediator per view
-			if(this._mediators[view] == null)
+			// Make sure mediator extends AbstractMediator
+			if(mediator.type.isType(AbstractMediator))
 			{
+				// If empty, create another dictionary to hold mediators
+				if(this._mediators[view] == null)
+				{
+					this._mediators[view] = new Dictionary();
+				}
+				
 				log.debug("Adding mediator link: '{0}' for '{1}'", mediator.type.name, getQualifiedClassName(view));
-				this._mediators[view] = mediator;
+				// Create mediator name => mediator definition relationship
+				// So that only one of the same mediator can be attached to 
+				// the view
+				this._mediators[view][mediator.type.name] = mediator;
 			}
 		}
 		
@@ -104,17 +115,23 @@ package org.spicefactory.parsley.core.view.impl
 			if(view)
 			{
 				var classInfo:ClassInfo = ClassInfo.forInstance(view, this._info.domain); // Get class info
-				var mediator:DynamicObjectDefinition = this._mediators[classInfo.getClass()]; // Check if mediator class exists
-				if(mediator)
+				var dict:Dictionary = this._mediators[classInfo.getClass()]; // Check if mediator(s) exist
+				if(dict)
 				{
-					// Retreive Mediator Class
-					var mediatorClass:Class = mediator.type.getClass();
-					log.debug("Creating Mediator '{0}'", mediator.type.name);
-					// Create dynamic object for Mediator, inject view into Mediator
-					this._dynamicObjects[view] = this._info.context.addDynamicObject(new mediatorClass(view));
-					// Listen for when the view gets destroyed
-					// TODO: test destruction
-					view.addEventListener(Mediator.REMOVE_MEDIATOR, onRemoveMediator);
+					// Iterate through dictionary, create mediator, attach view
+					var mediatorClass:Class;
+					for each(var mediator:DynamicObjectDefinition in dict)
+					{
+						// Retreive Mediator Class
+						mediatorClass = mediator.type.getClass();
+						log.debug("Creating Mediator '{0}'", mediator.type.name);
+						
+						// Create dynamic object for Mediator, inject view into Mediator
+						this._dynamicObjects[view] = this._info.context.addDynamicObject(new mediatorClass(view));
+						// Listen for when the view gets destroyed
+						// TODO: test destruction
+						view.addEventListener(Mediator.REMOVE_MEDIATOR, onRemoveMediator);
+					}
 				}else{
 					log.debug("There are no Mediators related to '{0}'", view);
 				}
@@ -122,7 +139,7 @@ package org.spicefactory.parsley.core.view.impl
 		}
 		
 		/**
-		 * Handler for removing the mediator. WIP
+		 * Handler for removing the mediator.  WIP.  Currently not in place.
 		 * @param e
 		 */		
 		protected function onRemoveMediator(e:Event):void
