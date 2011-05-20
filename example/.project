@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <projectDescription>
-	<name>ParsleyMediatorExample</name>
-	<comment></comment>
+	<name>example</name>
+	<comment/>
 	<projects>
 		<project>ParsleyMediator</project>
 	</projects>
@@ -17,3 +17,4 @@
 		<nature>com.adobe.flexbuilder.project.actionscriptnature</nature>
 	</natures>
 </projectDescription>
+
